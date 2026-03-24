@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aligner son Offre & sa Stratégie — Workbook Actionnable</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;0,900;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --slate: #2D3E50;
+    --slate-light: #3d5166;
+    --gold: #C8A96E;
+    --gold-light: #E8CFA0;
+    --sage: #7FA98B;
+    --sage-light: #A8C4B0;
+    --cream: #F7F3EC;
+    --warm-white: #FDFAF5;
+    --charcoal: #1A2530;
+    --muted: #6B7A87;
+    --border: #D9CFC3;
+    --danger: #C47B5A;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--cream); color: var(--charcoal); line-height: 1.6; }
+
+  /* ── COVER ── */
+  .cover {
+    min-height: 100vh; background: var(--slate);
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 60px 40px; position: relative; overflow: hidden;
+  }
+  .cover::before {
+    content: ''; position: absolute; width: 600px; height: 600px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,169,110,0.15) 0%, transparent 70%);
+    top: -100px; right: -100px;
+  }
+  .cover::after {
+    content: ''; position: absolute; width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(127,169,139,0.12) 0%, transparent 70%);
+    bottom: -50px; left: -50px;
+  }
+  .cover-eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 24px; z-index: 1; }
+  .cover-title { font-family: 'Playfair Display', serif; font-size: clamp(36px, 6vw, 72px); font-weight: 900; color: var(--warm-white); text-align: center; line-height: 1.1; max-width: 800px; z-index: 1; margin-bottom: 12px; }
+  .cover-title em { font-style: italic; color: var(--gold); }
+  .cover-sub { font-size: 18px; color: rgba(255,255,255,0.6); text-align: center; max-width: 520px; margin-top: 16px; z-index: 1; }
+  .cover-divider { width: 60px; height: 2px; background: var(--gold); margin: 32px auto; z-index: 1; }
+  .cover-modules { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; z-index: 1; margin-bottom: 48px; }
+  .cover-module-tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .cover-module-tag:hover { background: rgba(200,169,110,0.25); border-color: rgba(200,169,110,0.5); color: #E8CFA0; }
+  .cover-cta { background: var(--gold); color: var(--charcoal); border: none; padding: 18px 48px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; border-radius: 4px; cursor: pointer; letter-spacing: 0.5px; z-index: 1; transition: all 0.2s; }
+  .cover-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
+  .cover-author { z-index: 1; margin-top: 32px; font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 1px; }
+
+  /* ── APP ── */
+  .app { display: none; }
+  .app.active { display: block; }
+
+  .top-nav { background: var(--slate); padding: 0 40px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 20px rgba(0,0,0,0.15); }
+  .nav-brand { font-family: 'Playfair Display', serif; font-size: 16px; color: var(--gold); padding: 18px 0; font-weight: 700; }
+  .nav-steps { display: flex; gap: 2px; }
+  .nav-step { padding: 20px 14px; font-size: 12px; color: rgba(255,255,255,0.4); cursor: pointer; border-bottom: 3px solid transparent; transition: all 0.2s; font-weight: 500; white-space: nowrap; }
+  .nav-step:hover { color: rgba(255,255,255,0.75); }
+  .nav-step.active { color: var(--gold); border-bottom-color: var(--gold); }
+  .nav-step.done { color: var(--sage-light); }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-hero { background: var(--slate); padding: 64px 40px 48px; position: relative; overflow: hidden; }
+  .section-hero::after { content: attr(data-num); position: absolute; font-family: 'Playfair Display', serif; font-size: 200px; font-weight: 900; color: rgba(255,255,255,0.04); right: 40px; top: -20px; line-height: 1; pointer-events: none; }
+  .section-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 12px; }
+  .section-title { font-family: 'Playfair Display', serif; font-size: clamp(28px, 4vw, 48px); font-weight: 900; color: var(--warm-white); line-height: 1.15; max-width: 700px; }
+  .section-title em { font-style: italic; color: var(--gold); }
+  .section-intro { color: rgba(255,255,255,0.6); font-size: 16px; max-width: 600px; margin-top: 14px; }
+  .section-body { max-width: 900px; margin: 0 auto; padding: 48px 40px; }
+
+  /* ── CARDS ── */
+  .card { background: var(--warm-white); border: 1px solid var(--border); border-radius: 8px; padding: 32px; margin-bottom: 24px; }
+  .card-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--slate); margin-bottom: 8px; }
+  .card-subtitle { font-size: 14px; color: var(--muted); margin-bottom: 20px; }
+
+  .insight-box { background: var(--slate); border-left: 4px solid var(--gold); padding: 20px 24px; border-radius: 0 8px 8px 0; margin: 24px 0; }
+  .insight-box p { color: rgba(255,255,255,0.85); font-size: 15px; font-style: italic; }
+  .insight-box strong { color: var(--gold); }
+
+  .warning-box { background: rgba(196,123,90,0.08); border: 1px solid rgba(196,123,90,0.3); border-radius: 8px; padding: 20px 24px; margin: 24px 0; display: flex; gap: 14px; align-items: flex-start; }
+  .warning-icon { font-size: 20px; flex-shrink: 0; }
+  .warning-text { font-size: 14px; color: var(--danger); font-weight: 500; }
+
+  /* ── FORMS ── */
+  label { display: block; font-size: 13px; font-weight: 600; color: var(--slate); letter-spacing: 0.3px; margin-bottom: 8px; text-transform: uppercase; }
+  textarea, input[type="text"] { width: 100%; border: 1.5px solid var(--border); border-radius: 6px; padding: 14px 16px; font-family: 'DM Sans', sans-serif; font-size: 15px; color: var(--charcoal); background: var(--warm-white); resize: vertical; transition: border-color 0.2s; margin-bottom: 20px; }
+  textarea:focus, input[type="text"]:focus { outline: none; border-color: var(--gold); }
+  textarea { min-height: 100px; }
+
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+
+  /* ── IKIGAI ── */
+  .ikigai-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .ikigai-cell { background: var(--warm-white); border: 1.5px solid var(--border); border-radius: 8px; padding: 24px; }
+  .ikigai-cell.love { border-top: 4px solid #E8A0A0; }
+  .ikigai-cell.talent { border-top: 4px solid var(--sage); }
+  .ikigai-cell.need { border-top: 4px solid var(--danger); }
+  .ikigai-cell.pay { border-top: 4px solid var(--gold); }
+  .ikigai-icon { font-size: 28px; margin-bottom: 10px; }
+  .ikigai-label { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; color: var(--slate); margin-bottom: 6px; }
+  .ikigai-hint { font-size: 12px; color: var(--muted); margin-bottom: 16px; }
+
+  /* ── EMPATHY MAP ── */
+  .empathy-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .empathy-cell { background: var(--warm-white); border: 1px solid var(--border); border-radius: 8px; padding: 20px; }
+  .empathy-cell-icon { font-size: 22px; margin-bottom: 8px; }
+  .empathy-cell-label { font-weight: 700; font-size: 14px; color: var(--slate); margin-bottom: 4px; }
+  .empathy-cell-hint { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+
+  /* ── COMPETITION TABLE ── */
+  .comp-table-wrapper { overflow-x: auto; margin-bottom: 24px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th { background: var(--slate); color: var(--warm-white); padding: 12px 16px; text-align: left; font-weight: 500; font-size: 13px; }
+  th:first-child { border-radius: 8px 0 0 0; } th:last-child { border-radius: 0 8px 0 0; }
+  td { border-bottom: 1px solid var(--border); padding: 10px 16px; }
+  tr:nth-child(even) td { background: rgba(247,243,236,0.5); }
+  td input[type="text"] { border: none; background: transparent; padding: 6px 0; font-size: 14px; margin-bottom: 0; width: 100%; }
+  td input[type="text"]:focus { border-bottom: 1.5px solid var(--gold); border-radius: 0; }
+
+  /* ── ERAC ── */
+  .erac-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 32px; }
+  .erac-card { border-radius: 8px; padding: 24px; border: 1.5px solid; }
+  .erac-card.e { background: rgba(196,123,90,0.05); border-color: rgba(196,123,90,0.3); }
+  .erac-card.r { background: rgba(107,122,135,0.05); border-color: rgba(107,122,135,0.25); }
+  .erac-card.a { background: rgba(127,169,139,0.08); border-color: rgba(127,169,139,0.35); }
+  .erac-card.c { background: rgba(200,169,110,0.08); border-color: rgba(200,169,110,0.35); }
+  .erac-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .erac-letter { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: 6px; font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; }
+  .e .erac-letter { background: var(--danger); color: white; }
+  .r .erac-letter { background: var(--muted); color: white; }
+  .a .erac-letter { background: var(--sage); color: white; }
+  .c .erac-letter { background: var(--gold); color: var(--charcoal); }
+  .erac-name { font-weight: 700; font-size: 15px; color: var(--slate); }
+  .erac-desc { font-size: 13px; color: var(--muted); margin-bottom: 14px; }
+
+  /* ── BEFORE/AFTER ── */
+  .before-after { display: grid; grid-template-columns: 1fr auto 1fr; gap: 16px; align-items: stretch; margin-bottom: 24px; }
+  .before-col, .after-col { background: var(--warm-white); border: 1px solid var(--border); border-radius: 8px; padding: 24px; }
+  .before-col { border-top: 4px solid var(--danger); }
+  .after-col { border-top: 4px solid var(--sage); }
+  .ba-label { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; }
+  .before-col .ba-label { color: var(--danger); } .after-col .ba-label { color: var(--sage); }
+  .ba-title { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 700; color: var(--slate); margin-bottom: 16px; }
+  .bridge { display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 8px; }
+  .bridge-arrow { font-size: 28px; color: var(--gold); }
+  .bridge-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--gold); writing-mode: vertical-lr; text-orientation: mixed; transform: rotate(180deg); }
+
+  /* ── PROMISE BUILDER ── */
+  .promise-builder { background: var(--warm-white); border: 2px solid var(--gold); border-radius: 8px; padding: 32px; margin-bottom: 24px; }
+  .promise-formula { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 24px; }
+  .pf-word { font-family: 'DM Mono', monospace; font-size: 12px; background: var(--gold); color: var(--charcoal); padding: 4px 12px; border-radius: 4px; font-weight: 500; }
+  .pf-plus { font-size: 18px; color: var(--muted); }
+  .promise-output { background: var(--slate); border-radius: 6px; padding: 20px 24px; min-height: 64px; font-family: 'Playfair Display', serif; font-size: 18px; color: var(--warm-white); font-style: italic; }
+  .promise-output.placeholder { color: rgba(255,255,255,0.3); font-size: 15px; font-style: normal; }
+
+  /* ── BUTTONS ── */
+  .section-nav { display: flex; justify-content: space-between; align-items: center; padding: 32px 40px; border-top: 1px solid var(--border); max-width: 900px; margin: 0 auto; }
+  .btn { padding: 14px 32px; border-radius: 4px; font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s; border: none; }
+  .btn-primary { background: var(--slate); color: var(--warm-white); }
+  .btn-primary:hover { background: var(--slate-light); }
+  .btn-secondary { background: transparent; color: var(--muted); border: 1.5px solid var(--border); }
+  .btn-secondary:hover { border-color: var(--slate); color: var(--slate); }
+  .btn-gold { background: var(--gold); color: var(--charcoal); }
+  .btn-gold:hover { background: var(--gold-light); }
+
+  /* ── PROGRESS ── */
+  .progress-bar { height: 3px; background: rgba(255,255,255,0.1); }
+  .progress-fill { height: 100%; background: var(--gold); transition: width 0.4s ease; }
+
+  /* ── SYNTHESIS ── */
+  .synthesis-card { background: var(--slate); color: var(--warm-white); border-radius: 10px; padding: 32px; margin-bottom: 20px; }
+  .synthesis-label { font-family: 'DM Mono', monospace; font-size: 10px; letter-spacing: 3px; text-transform: uppercase; color: var(--gold); margin-bottom: 10px; }
+  .synthesis-content { font-family: 'Playfair Display', serif; font-size: 18px; color: rgba(255,255,255,0.9); font-style: italic; min-height: 40px; }
+
+  .checklist { list-style: none; }
+  .checklist li { display: flex; align-items: flex-start; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 15px; cursor: pointer; }
+  .checklist li:last-child { border-bottom: none; }
+  .check-icon { color: var(--muted); font-size: 18px; flex-shrink: 0; }
+
+  /* ── PRINT BTN ── */
+  .print-btn { position: fixed; bottom: 24px; right: 24px; background: var(--slate); color: var(--warm-white); border: none; padding: 14px 24px; border-radius: 50px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 20px rgba(0,0,0,0.2); transition: all 0.2s; display: none; z-index: 200; }
+  .print-btn:hover { background: var(--gold); color: var(--charcoal); }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 700px) {
+    .grid-2, .grid-3, .ikigai-grid, .erac-grid { grid-template-columns: 1fr; }
+    .section-body { padding: 32px 20px; }
+    .section-nav { padding: 24px 20px; }
+    .top-nav { padding: 0 16px; }
+    .nav-step { padding: 20px 8px; font-size: 10px; }
+    .before-after { grid-template-columns: 1fr; }
+    .bridge { flex-direction: row; writing-mode: unset; }
+  }
+
+  @media print {
+    @page {
+      size: A4;
+      margin: 15mm 15mm 22mm 15mm;
+    }
+    .top-nav, .section-nav, .print-btn, .cover, .print-tip { display: none !important; }
+    .section { display: block !important; page-break-after: always; }
+    .section-hero { background: var(--slate) !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .page-footer {
+      display: block !important;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      background: var(--slate);
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+  }
+
+  .page-footer {
+    display: none;
+    padding: 8px 40px;
+    font-family: 'DM Mono', monospace;
+    font-size: 9px;
+    letter-spacing: 2px;
+    color: rgba(255,255,255,0.55);
+    text-align: center;
+    text-transform: uppercase;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════ COVER ═══════════════════ -->
+<div class="cover" id="cover">
+  <div class="cover-eyebrow">Workbook Actionnable · Patricia Perche Marketing</div>
+  <h1 class="cover-title">Aligner son <em>Offre</em><br>& sa Stratégie</h1>
+  <p class="cover-sub">Le guide pratique pour passer de la théorie à l'action — et vendre sans brader ni s'user.</p>
+  <div class="cover-divider"></div>
+  <div class="cover-modules">
+    <span class="cover-module-tag" onclick="startAppAndGoTo(0)">✦ Diagnostic</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(1)">✦ Ikigai</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(2)">🧠 Carte Empathique</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(3)">⚔️ Analyse Concurrence</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(4)">💎 Promesse de Valeur</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(5)">📋 Synthèse</span>
+  </div>
+  <button class="cover-cta" onclick="startApp()">Commencer le Workbook →</button>
+  <div class="cover-author">© Patricia Perche Marketing · Tous droits réservés</div>
+</div>
+
+<!-- ═══════════════════ APP ═══════════════════ -->
+<div class="app" id="app">
+  <nav class="top-nav">
+    <div class="nav-brand" onclick="goHome()" style="cursor:pointer;display:flex;align-items:center;gap:8px;" title="Retour à l'accueil">
+      <span style="font-size:16px;">←</span> Patricia Perche Marketing
+    </div>
+    <div class="nav-steps">
+      <div class="nav-step active" onclick="goTo(0)" id="nav-0">Diagnostic</div>
+      <div class="nav-step" onclick="goTo(1)" id="nav-1">Ikigai</div>
+      <div class="nav-step" onclick="goTo(2)" id="nav-2">Empathie</div>
+      <div class="nav-step" onclick="goTo(3)" id="nav-3">Concurrence</div>
+      <div class="nav-step" onclick="goTo(4)" id="nav-4">Promesse</div>
+      <div class="nav-step" onclick="goTo(5)" id="nav-5">Synthèse</div>
+    </div>
+  </nav>
+  <div class="progress-bar"><div class="progress-fill" id="progress" style="width:16%"></div></div>
+
+  <!-- ═══ MODULE 0 · DIAGNOSTIC ═══ -->
+  <div class="section active" id="section-0">
+    <div class="section-hero" data-num="01">
+      <div class="section-label">Module 01 · Diagnostic</div>
+      <h2 class="section-title">Pourquoi votre offre<br>devient <em>confuse</em></h2>
+      <p class="section-intro">Identifiez les mécanismes qui éloignent votre offre de son cœur, et les signaux que votre client reçoit sans jamais vous le dire.</p>
+    </div>
+    <div class="section-body">
+
+      <div class="insight-box">
+        <p>Le piège le plus courant : <strong>construire une offre sur votre propre perception</strong> plutôt que sur celle du client. Ce module vous oblige à regarder la réalité en face.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Les 4 dérives à identifier</div>
+        <div class="card-subtitle">Pour chaque dérive, évaluez honnêtement votre situation actuelle.</div>
+
+        <div style="margin-bottom:28px;">
+          <label>🌀 Accumulation — Vous avez ajouté trop d'options, de bonus, de services</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'non')">✓ Mon offre est claire</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'partiel')">~ Un peu</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'oui')">✗ Clairement oui</button>
+          </div>
+          <textarea id="diag-accumulation" placeholder="Quels éléments pourraient être supprimés ou simplifiés ?" style="min-height:80px;"></textarea>
+        </div>
+
+        <div style="margin-bottom:28px;">
+          <label>🎯 Perte de vision — Vous dites oui à tout, à tout le monde</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'non')">✓ Je reste focalisée</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'partiel')">~ Parfois</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'oui')">✗ Je réponds à tout</button>
+          </div>
+          <textarea id="diag-vision" placeholder="Les demandes hors périmètre auxquelles vous dites oui..." style="min-height:80px;"></textarea>
+        </div>
+
+        <div style="margin-bottom:28px;">
+          <label>💫 Intuition sans feedback — Vous décidez sans retour client</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'non')">✓ Je collecte des retours</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'partiel')">~ Pas systématiquement</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'oui')">✗ Surtout l'intuition</button>
+          </div>
+          <textarea id="diag-intuition" placeholder="Quelle dernière décision avez-vous prise sans feedback client ?" style="min-height:80px;"></textarea>
+        </div>
+
+        <div>
+          <label>🌐 Volonté de satisfaire tout le monde</label>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:10px;">
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'non')">✓ Cible claire</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'partiel')">~ Quelques profils</button>
+            <button class="btn btn-secondary" style="font-size:13px;padding:8px 16px;" onclick="toggleDiag(this,'oui')">✗ Je parle à tous</button>
+          </div>
+          <textarea id="diag-cible" placeholder="Quels profils très différents essayez-vous de servir ?" style="min-height:80px;"></textarea>
+        </div>
+      </div>
+
+      <div class="card" style="border-top:4px solid var(--danger);">
+        <div class="card-title">Ce que voit votre client — signaux de friction</div>
+        <div class="card-subtitle">Cliquez sur les signaux que vous reconnaissez dans votre situation.</div>
+        <ul class="checklist">
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div><strong>Promesse illisible</strong> — Il ne comprend pas exactement quel problème vous résolvez</div></li>
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div><strong>Absence de lien</strong> — Votre discours n'est pas adapté à son profil</div></li>
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div><strong>Différence invisible</strong> — Vos arguments sont génériques, identiques à la concurrence</div></li>
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div><strong>Complexité perçue</strong> — Trop d'options créent de l'hésitation et du risque perçu</div></li>
+        </ul>
+        <br>
+        <label>Ma priorité n°1 à corriger</label>
+        <input type="text" id="priority-fix" placeholder="Le signal de friction le plus urgent à traiter...">
+      </div>
+
+    </div>
+    <div class="section-nav">
+      <div></div>
+      <button class="btn btn-primary" onclick="goTo(1)">Module suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ MODULE 1 · IKIGAI ═══ -->
+  <div class="section" id="section-1">
+    <div class="section-hero" data-num="02">
+      <div class="section-label">Module 02 · Alignement intérieur</div>
+      <h2 class="section-title">Votre point<br>d'équilibre — <em>Ikigai</em></h2>
+      <p class="section-intro">Revisitez votre déclic intérieur pour aligner vocation et viabilité économique. Votre offre doit vivre à l'intersection de ces 4 dimensions.</p>
+    </div>
+    <div class="section-body">
+
+      <div class="insight-box">
+        <p><strong>Rappel :</strong> L'Ikigai est aussi un outil de positionnement commercial. Il révèle où se trouve votre zone de valeur unique et non copiable.</p>
+      </div>
+
+      <div class="ikigai-grid">
+        <div class="ikigai-cell love">
+          <div class="ikigai-icon">❤️</div>
+          <div class="ikigai-label">Ce que j'aime profondément</div>
+          <div class="ikigai-hint">Ce qui me nourrit, m'enthousiasme, me donne de l'énergie.<br><em>Transmettre, créer, écouter, résoudre, inspirer…</em></div>
+          <textarea id="ikigai-love" placeholder="Listez 3 à 5 activités ou thèmes qui vous passionnent..."></textarea>
+        </div>
+        <div class="ikigai-cell talent">
+          <div class="ikigai-icon">💪</div>
+          <div class="ikigai-label">Ce en quoi je suis naturellement douée</div>
+          <div class="ikigai-hint">Les autres le reconnaissent en vous.<br><em>Clarifier des idées, structurer, faire passer à l'action…</em></div>
+          <textarea id="ikigai-talent" placeholder="Vos talents reconnus par vos clients, collègues, proches..."></textarea>
+        </div>
+        <div class="ikigai-cell need">
+          <div class="ikigai-icon">⚠️</div>
+          <div class="ikigai-label">Ce que ma cible vit comme un vrai problème</div>
+          <div class="ikigai-hint">Une douleur reconnue et urgente qu'elle veut voir disparaître.<br><em>Solitude pro, manque de clients, flou stratégique…</em></div>
+          <textarea id="ikigai-need" placeholder="La frustration la plus urgente de votre client idéal..."></textarea>
+        </div>
+        <div class="ikigai-cell pay">
+          <div class="ikigai-icon">💶</div>
+          <div class="ikigai-label">Ce pour quoi ils sont prêts à payer</div>
+          <div class="ikigai-hint">Une transformation concrète (gain, soulagement, résultat) qui génère un impact business ou psychologique.<br><em>Trouver ses premiers clients, changer de voie…</em></div>
+          <textarea id="ikigai-pay" placeholder="Le résultat tangible pour lequel votre client ouvre son portefeuille..."></textarea>
+        </div>
+      </div>
+
+      <div class="card" style="border:2px solid var(--gold);">
+        <div class="card-title">🎯 Ma synthèse Ikigai</div>
+        <div class="card-subtitle">À partir de vos 4 réponses, formulez l'intersection unique qui fonde votre positionnement.</div>
+        <label>Ma zone de valeur unique</label>
+        <textarea id="ikigai-synthesis" placeholder="J'aide [qui] à [résoudre quel problème], grâce à [ce en quoi je suis douée], et ils me paient pour [quel résultat concret]."></textarea>
+      </div>
+
+      <div class="warning-box">
+        <div class="warning-icon">🚨</div>
+        <div class="warning-text">Si une des 4 cases est vide ou faible, votre offre risque l'épuisement (sans rémunération), l'inutilité (sans problème réel), ou la stagnation (sans passion).</div>
+      </div>
+      <input type="text" id="ikigai-weak" placeholder="Le quadrant à renforcer : _____ — Action concrète : _____">
+
+    </div>
+    <div class="section-nav">
+      <button class="btn btn-secondary" onclick="goTo(0)">← Retour</button>
+      <button class="btn btn-primary" onclick="goTo(2)">Module suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ MODULE 2 · CARTE EMPATHIQUE ═══ -->
+  <div class="section" id="section-2">
+    <div class="section-hero" data-num="03">
+      <div class="section-label">Module 03 · Client au cœur</div>
+      <h2 class="section-title">La Carte<br><em>Empathique</em></h2>
+      <p class="section-intro">Ne devinez pas. Écoutez, collectez des verbatims réels. Nul ne peut vendre à quelqu'un qu'il ne comprend pas vraiment.</p>
+    </div>
+    <div class="section-body">
+
+      <div class="card">
+        <div class="card-title">Définir votre cible idéale — Persona</div>
+        <div class="grid-2">
+          <div>
+            <label>Identité — Qui est-elle / il ?</label>
+            <textarea id="persona-id" placeholder="Âge, profession, situation, niveau d'expérience..." style="min-height:120px;"></textarea>
+          </div>
+          <div>
+            <label>Contexte — Dans quelle situation rencontre-t-il votre offre ?</label>
+            <textarea id="persona-context" placeholder="Le moment, la situation, l'événement déclencheur..." style="min-height:120px;"></textarea>
+          </div>
+          <div>
+            <label>Son problème D.U.R (Douloureux · Urgent · Reconnu)</label>
+            <textarea id="persona-dur" placeholder="Le problème qu'il reconnaît lui-même et veut résoudre maintenant..." style="min-height:120px;"></textarea>
+          </div>
+          <div>
+            <label>Déclencheur — Pourquoi votre offre entre en jeu maintenant ?</label>
+            <textarea id="persona-trigger" placeholder="Ce qui le pousse à chercher une solution aujourd'hui..." style="min-height:120px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🧠 Carte Empathique — Ce que vit votre client</div>
+        <div class="card-subtitle">Remplissez chaque case avec des données réelles : verbatims, avis, entretiens. Pas d'hypothèses.</div>
+        <div class="empathy-grid">
+          <div class="empathy-cell">
+            <div class="empathy-cell-icon">💭</div>
+            <div class="empathy-cell-label">Que pense-t-il ? Que ressent-il ?</div>
+            <div class="empathy-cell-hint">Émotions profondes, préoccupations, frustrations non exprimées publiquement</div>
+            <textarea id="emp-think" placeholder="Verbatims : 'Je me sens...' 'J'ai peur de...' 'Je suis frustré par...'" style="min-height:120px;"></textarea>
+          </div>
+          <div class="empathy-cell">
+            <div class="empathy-cell-icon">👁️</div>
+            <div class="empathy-cell-label">Que voit-il ?</div>
+            <div class="empathy-cell-hint">Son environnement quotidien, les offres concurrentes, les publicités</div>
+            <textarea id="emp-see" placeholder="Ce qu'il observe autour de lui chaque jour..." style="min-height:120px;"></textarea>
+          </div>
+          <div class="empathy-cell">
+            <div class="empathy-cell-icon">👂</div>
+            <div class="empathy-cell-label">Qu'entend-il ?</div>
+            <div class="empathy-cell-hint">Conversations de son entourage, médias, recommandations de pairs</div>
+            <textarea id="emp-hear" placeholder="Ce que lui disent ses pairs, collègues, experts qu'il suit..." style="min-height:120px;"></textarea>
+          </div>
+          <div class="empathy-cell">
+            <div class="empathy-cell-icon">💬</div>
+            <div class="empathy-cell-label">Que fait-il ? Que dit-il ?</div>
+            <div class="empathy-cell-hint">Comportements visibles, objections lors des échanges, feedbacks</div>
+            <textarea id="emp-do" placeholder="Ses actions concrètes, ses objections récurrentes..." style="min-height:120px;"></textarea>
+          </div>
+          <div class="empathy-cell" style="border-top:3px solid var(--danger);">
+            <div class="empathy-cell-icon">👎</div>
+            <div class="empathy-cell-label">Ses problèmes, ses souffrances</div>
+            <div class="empathy-cell-hint">Peurs, craintes, obstacles, frustrations qui l'empêchent d'avancer ou de décider</div>
+            <textarea id="emp-pain" placeholder="'Ce qui m'empêche de...' 'Ma vraie galère c'est...' 'Je redoute...'" style="min-height:120px;"></textarea>
+          </div>
+          <div class="empathy-cell" style="border-top:3px solid var(--sage);">
+            <div class="empathy-cell-icon">👍</div>
+            <div class="empathy-cell-label">Ses besoins, ses aspirations</div>
+            <div class="empathy-cell-hint">Besoins, rêves, résultats espérés. <strong>Quelle transformation attend-il ?</strong></div>
+            <textarea id="emp-gain" placeholder="'Mon rêve c'est...' 'Je veux enfin...' 'Le résultat idéal serait...'" style="min-height:120px;"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-top:4px solid var(--gold);">
+        <div class="card-title">Sources utilisées & verbatims clés</div>
+        <div style="display:flex;flex-wrap:wrap;gap:16px;margin-bottom:24px;">
+          <label style="text-transform:none;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;"><input type="checkbox"> Questions ouvertes (entretiens clients)</label>
+          <label style="text-transform:none;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;"><input type="checkbox"> Recherche Google (intentions, questions)</label>
+          <label style="text-transform:none;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;"><input type="checkbox"> Avis clients (Google, Amazon, forums)</label>
+          <label style="text-transform:none;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;"><input type="checkbox"> Vocabulaire exact utilisé par les clients</label>
+          <label style="text-transform:none;font-weight:400;display:flex;align-items:center;gap:8px;cursor:pointer;font-size:14px;"><input type="checkbox"> Commentaires réseaux sociaux</label>
+        </div>
+        <label>Les verbatims les plus percutants à intégrer à mon discours</label>
+        <textarea id="verbatims" placeholder="Notez les mots exacts de vos clients que vous allez reprendre dans votre promesse..."></textarea>
+      </div>
+
+    </div>
+    <div class="section-nav">
+      <button class="btn btn-secondary" onclick="goTo(1)">← Retour</button>
+      <button class="btn btn-primary" onclick="goTo(3)">Module suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ MODULE 3 · CONCURRENCE ═══ -->
+  <div class="section" id="section-3">
+    <div class="section-hero" data-num="04">
+      <div class="section-label">Module 04 · Positionnement</div>
+      <h2 class="section-title">Analyser la<br><em>Concurrence</em></h2>
+      <p class="section-intro">Voir le marché avec les yeux de votre persona : ce qu'il repère, ce qu'il comprend, ce qui le rassure… ou le fait fuir. Le client compare toujours.</p>
+    </div>
+    <div class="section-body">
+
+      <div class="card">
+        <div class="card-title">Mapping concurrentiel — Mix Marketing 6P</div>
+        <div class="card-subtitle">Remplissez ce tableau pour votre offre et 2 concurrents directs. Focalisez sur ce que perçoit votre client.</div>
+        <div class="comp-table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th style="width:22%">Dimension</th>
+                <th style="width:22%">🏠 Votre offre</th>
+                <th style="width:22%">⚔️ Concurrent A</th>
+                <th style="width:22%">⚔️ Concurrent B</th>
+                <th style="width:12%">Action ERAC</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td colspan="5" style="background:var(--slate);color:rgba(255,255,255,0.5);font-size:11px;letter-spacing:2px;font-weight:600;padding:8px 16px;">LES 4P FONDAMENTAUX</td></tr>
+              <tr>
+                <td><strong>Produit / Offre</strong><br><span style="font-size:12px;color:var(--muted)">Fonctionnalités, qualité, gamme</span></td>
+                <td><input type="text" placeholder="Différenciateurs..."></td>
+                <td><input type="text" placeholder="Offre observée..."></td>
+                <td><input type="text" placeholder="Offre observée..."></td>
+                <td><select style="border:1px solid var(--border);border-radius:4px;padding:6px;font-size:13px;width:100%"><option>—</option><option>Éliminer</option><option>Réduire</option><option>Augmenter</option><option>Créer</option></select></td>
+              </tr>
+              <tr>
+                <td><strong>Prix</strong><br><span style="font-size:12px;color:var(--muted)">Tarification, remises, conditions</span></td>
+                <td><input type="text" placeholder="Stratégie prix..."></td>
+                <td><input type="text" placeholder="Grille observée..."></td>
+                <td><input type="text" placeholder="Grille observée..."></td>
+                <td><select style="border:1px solid var(--border);border-radius:4px;padding:6px;font-size:13px;width:100%"><option>—</option><option>Éliminer</option><option>Réduire</option><option>Augmenter</option><option>Créer</option></select></td>
+              </tr>
+              <tr>
+                <td><strong>Distribution</strong><br><span style="font-size:12px;color:var(--muted)">Canaux de vente, accessibilité</span></td>
+                <td><input type="text" placeholder="Canaux utilisés..."></td>
+                <td><input type="text" placeholder="Réseau observé..."></td>
+                <td><input type="text" placeholder="Réseau observé..."></td>
+                <td><select style="border:1px solid var(--border);border-radius:4px;padding:6px;font-size:13px;width:100%"><option>—</option><option>Éliminer</option><option>Réduire</option><option>Augmenter</option><option>Créer</option></select></td>
+              </tr>
+              <tr>
+                <td><strong>Communication</strong><br><span style="font-size:12px;color:var(--muted)">Messages, contenu, SEO, réseaux</span></td>
+                <td><input type="text" placeholder="Messages clés..."></td>
+                <td><input type="text" placeholder="Actions observées..."></td>
+                <td><input type="text" placeholder="Actions observées..."></td>
+                <td><select style="border:1px solid var(--border);border-radius:4px;padding:6px;font-size:13px;width:100%"><option>—</option><option>Éliminer</option><option>Réduire</option><option>Augmenter</option><option>Créer</option></select></td>
+              </tr>
+              <tr><td colspan="5" style="background:var(--slate);color:rgba(255,255,255,0.5);font-size:11px;letter-spacing:2px;font-weight:600;padding:8px 16px;">LES 2P HUMAINS & OPÉRATIONNELS</td></tr>
+              <tr>
+                <td><strong>Personnes</strong><br><span style="font-size:12px;color:var(--muted)">Équipe, service client, expertise</span></td>
+                <td><input type="text" placeholder="Compétences, culture..."></td>
+                <td><input type="text" placeholder="Réputation SAV..."></td>
+                <td><input type="text" placeholder="Réputation SAV..."></td>
+                <td><select style="border:1px solid var(--border);border-radius:4px;padding:6px;font-size:13px;width:100%"><option>—</option><option>Éliminer</option><option>Réduire</option><option>Augmenter</option><option>Créer</option></select></td>
+              </tr>
+              <tr>
+                <td><strong>Processus</strong><br><span style="font-size:12px;color:var(--muted)">Parcours client, onboarding</span></td>
+                <td><input type="text" placeholder="Fluidité, automatisation..."></td>
+                <td><input type="text" placeholder="UX et process..."></td>
+                <td><input type="text" placeholder="UX et process..."></td>
+                <td><select style="border:1px solid var(--border);border-radius:4px;padding:6px;font-size:13px;width:100%"><option>—</option><option>Éliminer</option><option>Réduire</option><option>Augmenter</option><option>Créer</option></select></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="erac-grid">
+        <div class="erac-card e">
+          <div class="erac-header"><div class="erac-letter">E</div><div class="erac-name">Éliminer</div></div>
+          <div class="erac-desc">Retirer les éléments que tout le monde garde par habitude, mais que le client ne valorise plus (et qui coûtent de l'énergie ou de l'argent sans rien apporter).</div>
+          <textarea id="erac-e" placeholder="Ce que je vais supprimer de mon offre..." style="min-height:100px;"></textarea>
+        </div>
+        <div class="erac-card r">
+          <div class="erac-header"><div class="erac-letter">R</div><div class="erac-name">Réduire</div></div>
+          <div class="erac-desc">Diminuer ce qui a une faible valeur perçue : complexité inutile, options superflues, formalités, fonctions secondaires que le client survole sans s'en servir.</div>
+          <textarea id="erac-r" placeholder="Ce que je vais réduire sans que ça manque..." style="min-height:100px;"></textarea>
+        </div>
+        <div class="erac-card a">
+          <div class="erac-header"><div class="erac-letter">A</div><div class="erac-name">Augmenter</div></div>
+          <div class="erac-desc">Renforcer ce qui compte vraiment pour le client : qualité d'accompagnement, réactivité, clarté des résultats, expérience vécue (bien au-delà du standard du secteur).</div>
+          <textarea id="erac-a" placeholder="Ce que je vais pousser bien au-delà du standard..." style="min-height:100px;"></textarea>
+        </div>
+        <div class="erac-card c">
+          <div class="erac-header"><div class="erac-letter">C</div><div class="erac-name">Créer</div></div>
+          <div class="erac-desc">Introduire quelque chose d'absent chez les concurrents (nouveaux services, formats inédits, garanties, expériences) qui génère une valeur perçue forte et immédiate.</div>
+          <textarea id="erac-c" placeholder="Ce que je vais inventer que personne ne propose encore..." style="min-height:100px;"></textarea>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Angle différenciant identifié</div>
+        <div class="grid-2">
+          <div>
+            <label>Ce que je fais mieux / différemment</label>
+            <textarea id="diff-angle" placeholder="Mon angle unique, le positionnement que je vais revendiquer..."></textarea>
+          </div>
+          <div>
+            <label>Frustrations non traitées par la concurrence</label>
+            <textarea id="diff-gap" placeholder="Les besoins que personne ne couvre vraiment bien..."></textarea>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="section-nav">
+      <button class="btn btn-secondary" onclick="goTo(2)">← Retour</button>
+      <button class="btn btn-primary" onclick="goTo(4)">Module suivant →</button>
+    </div>
+  </div>
+
+  <!-- ═══ MODULE 4 · PROMESSE & TRANSFORMATION ═══ -->
+  <div class="section" id="section-4">
+    <div class="section-hero" data-num="05">
+      <div class="section-label">Module 05 · Offre & Discours</div>
+      <h2 class="section-title">La Promesse<br>& la <em>Transformation</em></h2>
+      <p class="section-intro">Le client n'achète pas ce que vous faites. Il achète une transformation. Réconciliez votre intention, la perception client et la réalité du marché.</p>
+    </div>
+    <div class="section-body">
+
+      <div class="insight-box">
+        <p>Votre promesse doit répondre à <strong>3 questions</strong> : À qui ? Quel problème je résous ? Quel résultat concret ? Si l'une manque, vous perdez le client.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🌉 Framework Avant / Méthode / Après</div>
+        <div class="card-subtitle">La transformation est la passerelle entre la situation A et la situation B. Votre méthode est ce chemin.</div>
+        <div class="before-after">
+          <div class="before-col">
+            <div class="ba-label">Situation de départ · Avant</div>
+            <div class="ba-title">Situation actuelle</div>
+            <label>Situation actuelle</label>
+            <textarea id="ba-before-situation" placeholder="Dans quelle situation se trouve mon client aujourd'hui ?" style="min-height:80px;"></textarea>
+            <label>Frustrations ressenties</label>
+            <textarea id="ba-before-frustration" placeholder="Ce qu'il vit, ressent, subit..." style="min-height:80px;"></textarea>
+            <label>Coût de l'inaction</label>
+            <textarea id="ba-before-cost" placeholder="Ce qu'il perd chaque jour en ne faisant rien..." style="min-height:80px;"></textarea>
+          </div>
+          <div class="bridge">
+            <div class="bridge-arrow">→</div>
+            <div class="bridge-label">VOTRE MÉTHODE</div>
+            <div class="bridge-arrow">→</div>
+          </div>
+          <div class="after-col">
+            <div class="ba-label">Le progrès · Après</div>
+            <div class="ba-title">Résultat désiré</div>
+            <label>Résultat désiré</label>
+            <textarea id="ba-after-result" placeholder="À quoi ressemble sa vie après ?" style="min-height:80px;"></textarea>
+            <label>Besoin assouvi</label>
+            <textarea id="ba-after-need" placeholder="Ce qu'il ressent, ce qu'il peut faire maintenant..." style="min-height:80px;"></textarea>
+            <label>Changement observable</label>
+            <textarea id="ba-after-change" placeholder="Ce que lui ou son entourage remarque concrètement..." style="min-height:80px;"></textarea>
+          </div>
+        </div>
+        <div style="background:var(--cream);border-radius:8px;padding:24px;border:1.5px dashed var(--gold);">
+          <label>🌉 Votre méthode — la passerelle entre la situation A et la situation B</label>
+          <textarea id="ba-method" placeholder="En [durée], grâce à [votre approche unique], je [action] pour [résultat concret]..."></textarea>
+        </div>
+      </div>
+
+      <div class="promise-builder">
+        <div class="card-title" style="margin-bottom:8px;">💎 Constructeur de promesse</div>
+        <div class="card-subtitle">Remplissez chaque bloc — votre promesse se construit automatiquement.</div>
+        <div class="promise-formula">
+          <span class="pf-word">J'aide</span><span class="pf-plus">+</span>
+          <span class="pf-word">[QUI]</span><span class="pf-plus">+</span>
+          <span class="pf-word">à obtenir</span><span class="pf-plus">+</span>
+          <span class="pf-word">[RÉSULTAT]</span><span class="pf-plus">+</span>
+          <span class="pf-word">sans</span><span class="pf-plus">+</span>
+          <span class="pf-word">[FRICTION]</span><span class="pf-plus">+</span>
+          <span class="pf-word">grâce à</span><span class="pf-plus">+</span>
+          <span class="pf-word">[MÉTHODE]</span>
+        </div>
+        <div class="grid-3" style="margin-bottom:20px;">
+          <div>
+            <label>QUI — Votre cible précise</label>
+            <input type="text" id="pv-who" placeholder="ex: dirigeantes de PME isolées" oninput="buildPromise()">
+          </div>
+          <div>
+            <label>RÉSULTAT — La transformation</label>
+            <input type="text" id="pv-result" placeholder="ex: vendre sans brader" oninput="buildPromise()">
+          </div>
+          <div>
+            <label>FRICTION — Sans quoi ?</label>
+            <input type="text" id="pv-friction" placeholder="ex: négociations stériles" oninput="buildPromise()">
+          </div>
+          <div>
+            <label>MÉTHODE — Votre approche unique</label>
+            <input type="text" id="pv-method" placeholder="ex: audit offre + rework discours" oninput="buildPromise()">
+          </div>
+          <div>
+            <label>TIMING — En combien de temps ?</label>
+            <input type="text" id="pv-time" placeholder="ex: en 8 semaines" oninput="buildPromise()">
+          </div>
+          <div>
+            <label>PREUVE — Résultat quantifié</label>
+            <input type="text" id="pv-proof" placeholder="ex: +30% de signatures" oninput="buildPromise()">
+          </div>
+        </div>
+        <div class="card-subtitle" style="margin-bottom:10px;">Votre promesse générée :</div>
+        <div class="promise-output placeholder" id="promise-output">Remplissez les champs ci-dessus pour voir votre promesse se construire…</div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Validation de la promesse</div>
+        <div class="grid-2">
+          <div>
+            <label>✅ Ce que ma promesse communique clairement</label>
+            <textarea id="pv-clear" placeholder="Ce que mon client comprend immédiatement..."></textarea>
+          </div>
+          <div>
+            <label>🔧 Ce qui reste à préciser ou tester</label>
+            <textarea id="pv-todo" placeholder="Les zones d'ombre à éclaircir..."></textarea>
+          </div>
+        </div>
+        <label>Ma prochaine version à tester en situation réelle</label>
+        <input type="text" id="pv-next" placeholder="Le pitch que je vais utiliser dès cette semaine...">
+      </div>
+
+    </div>
+    <div class="section-nav">
+      <button class="btn btn-secondary" onclick="goTo(3)">← Retour</button>
+      <button class="btn btn-gold" onclick="goTo(5)">Voir ma Synthèse →</button>
+    </div>
+  </div>
+
+  <!-- ═══ MODULE 5 · SYNTHÈSE & PLAN D'ACTION ═══ -->
+  <div class="section" id="section-5">
+    <div class="section-hero" data-num="06">
+      <div class="section-label">Module 06 · Plan d'action</div>
+      <h2 class="section-title">Ma Synthèse<br>& <em>Plan d'action</em></h2>
+      <p class="section-intro">Récapitulez vos apprentissages clés et définissez les 3 actions prioritaires à mettre en œuvre dans les 30 prochains jours.</p>
+    </div>
+    <div class="section-body">
+
+      <div class="synthesis-card">
+        <div class="synthesis-label">Ma promesse de valeur</div>
+        <div class="synthesis-content" id="synth-promise" style="color:rgba(255,255,255,0.35);font-size:15px;font-style:normal;font-family:'DM Sans',sans-serif;">— Revenez compléter le Module 05</div>
+      </div>
+      <div class="grid-2" style="margin-bottom:24px;">
+        <div class="synthesis-card" style="margin-bottom:0">
+          <div class="synthesis-label">Mon persona principal</div>
+          <div class="synthesis-content" id="synth-persona" style="font-size:14px;font-style:normal;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.35);">— Revenez compléter le Module 03</div>
+        </div>
+        <div class="synthesis-card" style="margin-bottom:0">
+          <div class="synthesis-label">Mon angle différenciant</div>
+          <div class="synthesis-content" id="synth-diff" style="font-size:14px;font-style:normal;font-family:'DM Sans',sans-serif;color:rgba(255,255,255,0.35);">— Revenez compléter le Module 04</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🎯 Mes 3 actions prioritaires — 30 jours</div>
+        <div class="card-subtitle">Des actions concrètes, datées et mesurables. Pas des intentions.</div>
+        <div style="margin-bottom:20px;padding:20px;background:var(--cream);border-radius:8px;border-left:4px solid var(--gold);">
+          <label style="color:var(--gold);">Action #1 — Cette semaine</label>
+          <input type="text" id="action1-quoi" placeholder="Ce que je vais faire concrètement..." style="margin-bottom:10px;">
+          <div class="grid-2"><input type="text" id="action1-date" placeholder="Date limite :"><input type="text" id="action1-mesure" placeholder="Comment je mesure le résultat :"></div>
+        </div>
+        <div style="margin-bottom:20px;padding:20px;background:var(--cream);border-radius:8px;border-left:4px solid var(--sage);">
+          <label style="color:var(--sage);">Action #2 — Dans 2 semaines</label>
+          <input type="text" id="action2-quoi" placeholder="Ce que je vais faire concrètement..." style="margin-bottom:10px;">
+          <div class="grid-2"><input type="text" id="action2-date" placeholder="Date limite :"><input type="text" id="action2-mesure" placeholder="Comment je mesure le résultat :"></div>
+        </div>
+        <div style="padding:20px;background:var(--cream);border-radius:8px;border-left:4px solid var(--slate);">
+          <label style="color:var(--slate);">Action #3 — Dans 30 jours</label>
+          <input type="text" id="action3-quoi" placeholder="Ce que je vais faire concrètement..." style="margin-bottom:10px;">
+          <div class="grid-2"><input type="text" id="action3-date" placeholder="Date limite :"><input type="text" id="action3-mesure" placeholder="Comment je mesure le résultat :"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📋 Récapitulatif des chantiers</div>
+        <div class="grid-2">
+          <div>
+            <label>🗑️ Ce que j'élimine / simplifie</label>
+            <textarea id="synth-eliminate" placeholder="Les éléments à supprimer..."></textarea>
+          </div>
+          <div>
+            <label>🔧 Ce que je clarifie en priorité</label>
+            <textarea id="synth-clarify" placeholder="Les zones floues à nettoyer..."></textarea>
+          </div>
+          <div>
+            <label>🚀 Ce que je renforce / développe</label>
+            <textarea id="synth-boost" placeholder="Les points forts à amplifier..."></textarea>
+          </div>
+          <div>
+            <label>✨ Ce que je crée / teste</label>
+            <textarea id="synth-create" placeholder="Les nouvelles initiatives à lancer..."></textarea>
+          </div>
+        </div>
+      </div>
+
+      <div class="card" style="border-top:4px solid var(--gold);">
+        <div class="card-title">🔄 Mes engagements pour ne pas retomber dans les pièges</div>
+        <ul class="checklist">
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div>Je collecte des verbatims clients <strong>au minimum une fois par trimestre</strong></div></li>
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div>Je dis <strong>non</strong> aux demandes qui sortent du cœur de mon offre</div></li>
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div>Je réévalue mon Ikigai à chaque évolution significative de mon activité</div></li>
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div>Je mesure mes <strong>taux de conversion</strong> avant et après chaque ajustement de promesse</div></li>
+          <li onclick="toggleCheck(this)"><span class="check-icon">○</span><div>Je teste toute nouvelle version de mon pitch <strong>avant de l'adopter définitivement</strong></div></li>
+        </ul>
+        <br>
+        <label>Mon engagement personnel</label>
+        <textarea id="commitment" placeholder="Ce que je m'engage à faire dès lundi matin..."></textarea>
+      </div>
+
+      <div style="text-align:center;padding:40px 20px;background:var(--slate);border-radius:12px;margin-top:8px;">
+        <div style="font-family:'Playfair Display',serif;font-size:24px;color:var(--warm-white);margin-bottom:12px;">Votre workbook est complété.</div>
+        <p style="color:rgba(255,255,255,0.6);font-size:15px;margin-bottom:24px;">Imprimez-le ou sauvegardez-le en PDF pour garder une trace de votre travail.</p>
+        <button class="btn btn-gold" onclick="window.print()">🖨️ Imprimer / Sauvegarder en PDF</button>
+      </div>
+
+    </div>
+    <div class="section-nav">
+      <button class="btn btn-secondary" onclick="goTo(4)">← Retour</button>
+      <button class="btn btn-secondary" onclick="location.reload()">↺ Recommencer</button>
+    </div>
+  </div>
+
+</div><!-- /app -->
+
+<button class="print-btn" id="printBtn" onclick="showPrintTip()">🖨️ Exporter en PDF</button>
+
+<div id="printTip" style="display:none;position:fixed;bottom:80px;right:24px;background:#2D3E50;color:#FDFAF5;padding:18px 22px;border-radius:8px;font-size:13px;max-width:320px;box-shadow:0 4px 24px rgba(0,0,0,0.35);z-index:300;border-left:4px solid #C8A96E;line-height:1.6;">
+  <strong style="color:#C8A96E;display:block;margin-bottom:10px;">⚙️ Pour supprimer l'URL en bas de page :</strong>
+  Dans la fenêtre d'impression → <strong>Plus de paramètres</strong> → décochez <strong>« En-têtes et pieds de page »</strong>
+  <br><br>
+  <button onclick="document.getElementById('printTip').style.display='none';window.print();" style="background:#C8A96E;color:#1A2530;border:none;padding:9px 18px;border-radius:4px;font-weight:700;cursor:pointer;font-size:13px;font-family:'DM Sans',sans-serif;">Imprimer →</button>
+  <button onclick="document.getElementById('printTip').style.display='none'" style="background:transparent;color:rgba(255,255,255,0.45);border:none;padding:9px;cursor:pointer;font-size:13px;margin-left:4px;">✕</button>
+</div>
+
+<div class="page-footer">© Patricia Perche Marketing · Tous droits réservés · Reproduction interdite sans autorisation</div>
+
+<script>
+  function startAppAndGoTo(idx) {
+    startApp();
+    goTo(idx);
+  }
+
+  function goHome() {
+    document.getElementById('app').classList.remove('active');
+    document.getElementById('cover').style.display = 'flex';
+    document.getElementById('printBtn').style.display = 'none';
+    current = 0;
+    // reset nav
+    for (var i = 0; i < 6; i++) {
+      var n = document.getElementById('nav-' + i);
+      if (n) { n.classList.remove('active','done'); }
+    }
+    document.getElementById('nav-0').classList.add('active');
+    for (var i = 0; i < 6; i++) {
+      var s = document.getElementById('section-' + i);
+      if (s) s.classList.remove('active');
+    }
+    document.getElementById('section-0').classList.add('active');
+    document.getElementById('progress').style.width = '16%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function showPrintTip() {
+    document.getElementById('printTip').style.display = 'block';
+  }
+
+  var current = 0;
+  var total = 6;
+
+  function startApp() {
+    document.getElementById('cover').style.display = 'none';
+    var app = document.getElementById('app');
+    app.classList.add('active');
+    document.getElementById('printBtn').style.display = 'block';
+  }
+
+  function goTo(idx) {
+    document.getElementById('section-' + current).classList.remove('active');
+    var prevNav = document.getElementById('nav-' + current);
+    prevNav.classList.remove('active');
+    prevNav.classList.add('done');
+
+    current = idx;
+    document.getElementById('section-' + current).classList.add('active');
+    var curNav = document.getElementById('nav-' + current);
+    curNav.classList.add('active');
+    curNav.classList.remove('done');
+
+    var pct = Math.round(((idx + 1) / total) * 100);
+    document.getElementById('progress').style.width = pct + '%';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    if (idx === 5) updateSynthesis();
+  }
+
+  function toggleDiag(btn, val) {
+    var parent = btn.parentElement;
+    var btns = parent.querySelectorAll('.btn');
+    for (var i = 0; i < btns.length; i++) {
+      btns[i].style.background = '';
+      btns[i].style.color = '';
+      btns[i].style.borderColor = '';
+    }
+    if (val === 'oui') {
+      btn.style.background = '#C47B5A'; btn.style.color = 'white'; btn.style.borderColor = '#C47B5A';
+    } else if (val === 'partiel') {
+      btn.style.background = '#C8A96E'; btn.style.color = '#1A2530'; btn.style.borderColor = '#C8A96E';
+    } else {
+      btn.style.background = '#7FA98B'; btn.style.color = 'white'; btn.style.borderColor = '#7FA98B';
+    }
+  }
+
+  function toggleCheck(li) {
+    var icon = li.querySelector('.check-icon');
+    if (icon.textContent === '○') {
+      icon.textContent = '✓';
+      icon.style.color = '#7FA98B';
+      li.style.background = 'rgba(127,169,139,0.06)';
+    } else {
+      icon.textContent = '○';
+      icon.style.color = '#6B7A87';
+      li.style.background = '';
+    }
+  }
+
+  function buildPromise() {
+    var who = document.getElementById('pv-who').value.trim();
+    var result = document.getElementById('pv-result').value.trim();
+    var friction = document.getElementById('pv-friction').value.trim();
+    var method = document.getElementById('pv-method').value.trim();
+    var time = document.getElementById('pv-time').value.trim();
+    var proof = document.getElementById('pv-proof').value.trim();
+    var out = document.getElementById('promise-output');
+
+    if (!who && !result && !friction && !method) {
+      out.textContent = 'Remplissez les champs ci-dessus pour voir votre promesse se construire\u2026';
+      out.classList.add('placeholder');
+      return;
+    }
+    out.classList.remove('placeholder');
+    var parts = [];
+    if (who) parts.push('J\u2019aide ' + who);
+    if (result) parts.push('\u00e0 ' + result);
+    if (friction) parts.push('sans ' + friction);
+    if (method) parts.push('gr\u00e2ce \u00e0 ' + method);
+    if (time) parts.push('en ' + time);
+    if (proof) parts.push('\u2014 ' + proof);
+    out.textContent = parts.join(', ') + '.';
+  }
+
+  function updateSynthesis() {
+    var out = document.getElementById('promise-output');
+    var sp = document.getElementById('synth-promise');
+    if (out && !out.classList.contains('placeholder') && out.textContent.trim() !== '') {
+      sp.textContent = out.textContent;
+      sp.style.color = 'rgba(255,255,255,0.9)';
+      sp.style.fontFamily = "'Playfair Display', serif";
+      sp.style.fontStyle = 'italic';
+      sp.style.fontSize = '18px';
+    }
+
+    var persona = document.getElementById('persona-id').value.trim();
+    var sp2 = document.getElementById('synth-persona');
+    if (persona) { sp2.textContent = persona; sp2.style.color = 'rgba(255,255,255,0.85)'; }
+
+    var diff = document.getElementById('diff-angle').value.trim();
+    var sp3 = document.getElementById('synth-diff');
+    if (diff) { sp3.textContent = diff; sp3.style.color = 'rgba(255,255,255,0.85)'; }
+  }
+</script>
+</body>
+</html>
