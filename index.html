@@ -45,7 +45,8 @@
   .cover-sub { font-size: 18px; color: rgba(255,255,255,0.6); text-align: center; max-width: 520px; margin-top: 16px; z-index: 1; }
   .cover-divider { width: 60px; height: 2px; background: var(--gold); margin: 32px auto; z-index: 1; }
   .cover-modules { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; z-index: 1; margin-bottom: 48px; }
-  .cover-module-tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; }
+  .cover-module-tag { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: rgba(255,255,255,0.75); padding: 6px 16px; border-radius: 100px; font-size: 13px; font-weight: 500; cursor: pointer; transition: all 0.2s; }
+  .cover-module-tag:hover { background: rgba(200,169,110,0.25); border-color: rgba(200,169,110,0.5); color: #E8CFA0; }
   .cover-cta { background: var(--gold); color: var(--charcoal); border: none; padding: 18px 48px; font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; border-radius: 4px; cursor: pointer; letter-spacing: 0.5px; z-index: 1; transition: all 0.2s; }
   .cover-cta:hover { background: var(--gold-light); transform: translateY(-2px); }
   .cover-author { z-index: 1; margin-top: 32px; font-size: 12px; color: rgba(255,255,255,0.35); letter-spacing: 1px; }
@@ -237,12 +238,12 @@
   <p class="cover-sub">Le guide pratique pour passer de la théorie à l'action — et vendre sans brader ni s'user.</p>
   <div class="cover-divider"></div>
   <div class="cover-modules">
-    <span class="cover-module-tag">✦ Diagnostic</span>
-    <span class="cover-module-tag">✦ Ikigai</span>
-    <span class="cover-module-tag">🧠 Carte Empathique</span>
-    <span class="cover-module-tag">⚔️ Analyse Concurrence</span>
-    <span class="cover-module-tag">💎 Promesse de Valeur</span>
-    <span class="cover-module-tag">🌉 Transformation</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(0)">✦ Diagnostic</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(1)">✦ Ikigai</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(2)">🧠 Carte Empathique</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(3)">⚔️ Analyse Concurrence</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(4)">💎 Promesse de Valeur</span>
+    <span class="cover-module-tag" onclick="startAppAndGoTo(5)">📋 Synthèse</span>
   </div>
   <button class="cover-cta" onclick="startApp()">Commencer le Workbook →</button>
   <div class="cover-author">© Patricia Perche Marketing · Tous droits réservés</div>
@@ -252,7 +253,7 @@
 <div class="app" id="app">
   <nav class="top-nav">
     <div class="nav-brand" onclick="goHome()" style="cursor:pointer;display:flex;align-items:center;gap:8px;" title="Retour à l'accueil">
-      <span style="font-size:16px;">←</span> PPM · Workbook
+      <span style="font-size:16px;">←</span> Patricia Perche Marketing
     </div>
     <div class="nav-steps">
       <div class="nav-step active" onclick="goTo(0)" id="nav-0">Diagnostic</div>
@@ -838,6 +839,11 @@
 <div class="page-footer">© Patricia Perche Marketing · Tous droits réservés · Reproduction interdite sans autorisation</div>
 
 <script>
+  function startAppAndGoTo(idx) {
+    startApp();
+    goTo(idx);
+  }
+
   function goHome() {
     document.getElementById('app').classList.remove('active');
     document.getElementById('cover').style.display = 'flex';
